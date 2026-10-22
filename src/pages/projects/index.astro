@@ -1,0 +1,29 @@
+---
+import Base from "../../layouts/Base.astro";
+import ProjectList from "../../components/ProjectList.astro";
+import { getProjects } from "../../lib/projects";
+
+const projects = await getProjects();
+---
+
+<Base title="Projects" description="Data engineering and analytics projects by Mihajlo, newest first.">
+	<div class="container page">
+		<header class="intro">
+			<h1>Projects</h1>
+			<p class="muted prose">Each project lists the problem, the method, the stack and what I learned. Newest first.</p>
+		</header>
+		<ProjectList projects={projects} headingLevel="h2" />
+	</div>
+</Base>
+
+<style>
+	.page {
+		display: grid;
+		gap: var(--space-12);
+		padding-block: var(--space-12);
+	}
+	.intro {
+		display: grid;
+		gap: var(--space-4);
+	}
+</style>

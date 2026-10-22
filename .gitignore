@@ -26,3 +26,6 @@ pnpm-debug.log*
 # Local only: Claude setup
 CLAUDE.md
 .claude/
+
+# browser test screenshots
+.playwright-mcp/

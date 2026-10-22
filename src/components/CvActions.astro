@@ -1,0 +1,34 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+import { site } from "../data/site";
+
+// Buttons appear only once public/cv.pdf exists, so the site never links to a missing file.
+const file = path.join(process.cwd(), "public", site.cv.file);
+const exists = fs.existsSync(file);
+const sizeKb = exists ? Math.round(fs.statSync(file).size / 1024) : 0;
+const href = `/${site.cv.file}`;
+---
+
+{
+	exists ? (
+		<div class="actions">
+			<a class="button button--primary" href={href} download={site.cv.downloadName}>
+				Download CV (PDF, {sizeKb} KB)
+			</a>
+			<a class="button button--secondary" href={href} target="_blank" rel="noopener">
+				Open PDF<span class="visually-hidden"> (opens in a new tab)</span>
+			</a>
+		</div>
+	) : (
+		import.meta.env.DEV && <p class="todo">TODO: add your CV as public/{site.cv.file}. The download buttons appear once it exists.</p>
+	)
+}
+
+<style>
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+	}
+</style>

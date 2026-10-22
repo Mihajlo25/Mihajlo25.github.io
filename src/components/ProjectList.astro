@@ -1,0 +1,102 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { formatDate } from "../lib/projects";
+import { site } from "../data/site";
+
+interface Props {
+	projects: CollectionEntry<"projects">[];
+	headingLevel?: "h2" | "h3";
+}
+
+const { projects, headingLevel: Heading = "h3" } = Astro.props;
+---
+
+{
+	projects.length === 0 ? (
+		<p class="muted">The first project is being written up. Code is on <a href={site.contact.github}>GitHub</a> meanwhile.</p>
+	) : (
+		<ol class="list">
+			{projects.map((p) => (
+				<li class="item">
+					<time class="mono muted" datetime={p.data.date.toISOString()}>
+						{formatDate(p.data.date)}
+					</time>
+					<div class="body">
+						<Heading class="title">
+							<a href={`/projects/${p.id}/`}>{p.data.title}</a>
+							{p.data.draft && <span class="mono draft">draft</span>}
+						</Heading>
+						<p class="summary">{p.data.summary}</p>
+						<ul class="tags" aria-label="Stack">
+							{p.data.stack.map((s) => (
+								<li>{s}</li>
+							))}
+						</ul>
+					</div>
+				</li>
+			))}
+		</ol>
+	)
+}
+
+<style>
+	.list {
+		list-style: none;
+	}
+	.item {
+		position: relative;
+		display: grid;
+		grid-template-columns: 7rem minmax(0, 1fr);
+		gap: var(--space-2) var(--space-6);
+		padding-block: var(--space-6);
+		border-block-start: 1px solid var(--border);
+	}
+	.item:last-child {
+		border-block-end: 1px solid var(--border);
+	}
+	time {
+		padding-block-start: 0.3em;
+	}
+	.body {
+		display: grid;
+		gap: var(--space-3);
+		max-width: var(--measure);
+	}
+	.title {
+		font-size: var(--text-lg);
+	}
+	.title a {
+		color: var(--text);
+		text-decoration: none;
+	}
+	/* Whole row is the click target; the heading link stays the accessible name. */
+	.title a::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+	}
+	.item:hover .title a {
+		color: var(--accent);
+	}
+	.title a:focus-visible {
+		outline: none;
+	}
+	.item:has(.title a:focus-visible) {
+		outline: 2px solid var(--accent);
+		outline-offset: 4px;
+	}
+	.summary {
+		color: var(--muted);
+	}
+	.draft {
+		margin-inline-start: var(--space-2);
+		color: var(--highlight);
+		font-weight: 400;
+	}
+
+	@media (max-width: 40rem) {
+		.item {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

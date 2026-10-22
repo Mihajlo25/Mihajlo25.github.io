@@ -1,0 +1,68 @@
+---
+import { site } from "../data/site";
+
+const links = [
+	{ href: "/projects/", label: "Projects" },
+	{ href: "/cv/", label: "CV" },
+];
+const path = Astro.url.pathname;
+const isCurrent = (href: string) => path === href || path.startsWith(href);
+---
+
+<header class="site-header">
+	<div class="container inner">
+		<a class="name" href="/" aria-current={path === "/" ? "page" : undefined}>{site.name}</a>
+		<nav aria-label="Main">
+			<ul>
+				{
+					links.map((l) => (
+						<li>
+							<a href={l.href} aria-current={isCurrent(l.href) ? "page" : undefined}>
+								{l.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</nav>
+	</div>
+</header>
+
+<style>
+	.site-header {
+		padding-block: var(--space-6);
+	}
+	.inner {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-6);
+	}
+	.name {
+		font-weight: 600;
+		color: var(--text);
+		text-decoration: none;
+	}
+	ul {
+		display: flex;
+		gap: var(--space-6);
+		list-style: none;
+	}
+	nav a {
+		display: inline-block;
+		padding-block: var(--space-2);
+		color: var(--muted);
+		text-decoration: none;
+		font-size: var(--text-sm);
+	}
+	nav a:hover,
+	nav a[aria-current="page"] {
+		color: var(--text);
+	}
+	nav a[aria-current="page"] {
+		text-decoration: underline;
+		text-decoration-color: var(--accent);
+		text-decoration-thickness: 2px;
+		text-underline-offset: 0.45em;
+	}
+</style>

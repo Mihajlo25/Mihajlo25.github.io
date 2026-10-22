@@ -1,0 +1,216 @@
+---
+import { Image } from "astro:assets";
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { getProjects, formatDate } from "../../lib/projects";
+import { skills } from "../../data/skills";
+
+export async function getStaticPaths() {
+	const projects = await getProjects();
+	return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+const skillLabels = skills.filter((s) => data.skills.includes(s.id));
+---
+
+<Base title={data.title} description={data.summary}>
+	<article class="container page">
+		<header class="head">
+			<p class="mono muted">
+				<time datetime={data.date.toISOString()}>{formatDate(data.date, "long")}</time>
+				{data.draft && <span class="draft"> · draft, hidden in the build</span>}
+			</p>
+			<h1>{data.title}</h1>
+			<p class="lead prose">{data.summary}</p>
+			{
+				(data.repo || data.demo) && (
+					<div class="links">
+						{data.repo && (
+							<a class="button button--primary" href={data.repo}>
+								View the code on GitHub
+							</a>
+						)}
+						{data.demo && (
+							<a class="button button--secondary" href={data.demo}>
+								Open the live demo
+							</a>
+						)}
+					</div>
+				)
+			}
+		</header>
+
+		{
+			data.cover && data.coverAlt && (
+				<Image class="cover" src={data.cover} alt={data.coverAlt} widths={[640, 1100]} sizes="(min-width: 70rem) 1100px, 100vw" />
+			)
+		}
+
+		<div class="layout">
+			<aside class="facts" aria-label="Project facts">
+				<section>
+					<h2 class="label">Method</h2>
+					<ol class="steps">
+						{data.methodology.map((step) => <li>{step}</li>)}
+					</ol>
+				</section>
+				<section>
+					<h2 class="label">Stack</h2>
+					<ul class="tags">
+						{data.stack.map((s) => <li>{s}</li>)}
+					</ul>
+				</section>
+				{
+					skillLabels.length > 0 && (
+						<section>
+							<h2 class="label">Skills shown</h2>
+							<p class="muted small">
+								{skillLabels.map((s, i) => (
+									<>
+										<a href={`/cv/#skill-${s.id}`}>{s.label}</a>
+										{i < skillLabels.length - 1 && ", "}
+									</>
+								))}
+							</p>
+						</section>
+					)
+				}
+			</aside>
+
+			<div class="content prose">
+				<Content />
+			</div>
+		</div>
+
+		<nav class="back" aria-label="Projects">
+			<a href="/projects/">← All projects</a>
+		</nav>
+	</article>
+</Base>
+
+<style>
+	.page {
+		display: grid;
+		gap: var(--space-12);
+		padding-block: var(--space-12);
+	}
+	.head {
+		display: grid;
+		gap: var(--space-4);
+	}
+	.head h1 {
+		max-width: 24ch;
+	}
+	.lead {
+		font-size: var(--text-lg);
+		color: var(--muted);
+	}
+	.draft {
+		color: var(--highlight);
+	}
+	.links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
+		margin-block-start: var(--space-2);
+	}
+	.cover {
+		width: 100%;
+		height: auto;
+		border-radius: var(--radius);
+	}
+	.layout {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--space-12);
+	}
+	@media (min-width: 56rem) {
+		.layout {
+			grid-template-columns: minmax(0, 1fr) 16rem;
+		}
+		.facts {
+			grid-column: 2;
+			grid-row: 1;
+			align-self: start;
+			position: sticky;
+			top: var(--space-8);
+		}
+		.content {
+			grid-column: 1;
+			grid-row: 1;
+		}
+	}
+	.facts {
+		display: grid;
+		gap: var(--space-8);
+		padding: var(--space-6);
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+	}
+	.facts section {
+		display: grid;
+		gap: var(--space-3);
+	}
+	.label {
+		font-family: var(--font-mono);
+		font-size: var(--text-xs);
+		font-weight: 400;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+	.steps {
+		display: grid;
+		gap: var(--space-3);
+		padding-inline-start: var(--space-6);
+		font-size: var(--text-sm);
+		line-height: 1.45;
+	}
+	.steps li::marker {
+		font-family: var(--font-mono);
+		color: var(--accent);
+	}
+	.small {
+		font-size: var(--text-sm);
+	}
+
+	/* Markdown body */
+	.content :global(h2) {
+		margin-block: var(--space-12) var(--space-4);
+	}
+	.content :global(h2:first-child) {
+		margin-block-start: 0;
+	}
+	.content :global(h3) {
+		margin-block: var(--space-8) var(--space-3);
+	}
+	.content :global(p),
+	.content :global(ul),
+	.content :global(ol),
+	.content :global(pre) {
+		margin-block-end: var(--space-4);
+	}
+	.content :global(ul),
+	.content :global(ol) {
+		padding-inline-start: var(--space-6);
+	}
+	.content :global(code) {
+		font-family: var(--font-mono);
+		font-size: 0.9em;
+	}
+	.content :global(pre) {
+		padding: var(--space-4);
+		overflow-x: auto;
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		font-size: var(--text-sm);
+	}
+	.content :global(img) {
+		border-radius: var(--radius);
+	}
+</style>

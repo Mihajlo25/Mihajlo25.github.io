@@ -1,0 +1,26 @@
+---
+import ContactLinks from "./ContactLinks.astro";
+import { site } from "../data/site";
+---
+
+<footer class="site-footer">
+	<div class="container inner">
+		<ContactLinks />
+		<p class="mono muted">© {new Date().getFullYear()} {site.name} · {site.location}</p>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		margin-block-start: var(--space-24);
+		padding-block: var(--space-8);
+		border-block-start: 1px solid var(--border);
+	}
+	.inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: var(--space-4);
+	}
+</style>

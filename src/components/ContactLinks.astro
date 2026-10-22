@@ -1,0 +1,44 @@
+---
+import { site } from "../data/site";
+
+const { email, linkedin, github } = site.contact;
+const links = [
+	{ label: "Email", href: email ? `mailto:${email}` : "", text: email, todo: "public email in src/data/site.ts" },
+	{ label: "LinkedIn", href: linkedin, text: "LinkedIn", todo: "LinkedIn URL in src/data/site.ts" },
+	{ label: "GitHub", href: github, text: "GitHub", todo: "GitHub URL in src/data/site.ts" },
+];
+---
+
+<ul class="contact">
+	{
+		links.map((l) =>
+			l.href ? (
+				<li>
+					<a href={l.href} rel={l.href.startsWith("http") ? "me noopener" : undefined}>
+						{l.label === "Email" ? l.text : l.label}
+					</a>
+				</li>
+			) : (
+				import.meta.env.DEV && (
+					<li>
+						<span class="todo">TODO: {l.todo}</span>
+					</li>
+				)
+			),
+		)
+	}
+</ul>
+
+<style>
+	.contact {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-2) var(--space-6);
+		list-style: none;
+	}
+	a {
+		display: inline-block;
+		padding-block: var(--space-2);
+		overflow-wrap: anywhere;
+	}
+</style>

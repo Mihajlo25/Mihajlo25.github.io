@@ -1,16 +1,86 @@
 ---
+import Base from "../layouts/Base.astro";
+import LoadCurve from "../components/LoadCurve.astro";
+import ProjectList from "../components/ProjectList.astro";
+import ContactLinks from "../components/ContactLinks.astro";
+import { getProjects } from "../lib/projects";
+import { site } from "../data/site";
+
+const projects = await getProjects();
+const featured = projects.filter((p) => p.data.featured).slice(0, 3);
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base>
+	<section class="hero container" aria-labelledby="hero-title">
+		<p class="mono muted">{site.name} · {site.role}</p>
+		<h1 id="hero-title">{site.positioning}</h1>
+		<p class="lead">
+			3+ years of performance marketing data at Better Collective. Based in {site.location}. {site.availability}
+		</p>
+		<div class="curve-wrap">
+			<LoadCurve />
+		</div>
+	</section>
+
+	<section class="container section" aria-labelledby="work-title">
+		<div class="section-head">
+			<h2 id="work-title">Selected work</h2>
+			<a href="/projects/">All projects</a>
+		</div>
+		<ProjectList projects={featured} />
+	</section>
+
+	<section class="container section about" aria-labelledby="about-title">
+		<h2 id="about-title">About</h2>
+		<div class="prose stack">
+			<p>
+				For 3+ years at Better Collective, a performance marketing company, I have built Python pipelines
+				that collect data from APIs and the web, and turned it into Looker Studio dashboards and campaign
+				insights that move the team's KPIs.
+			</p>
+			<p>I am looking for my first contract role, with teams of any size and industry.</p>
+			<p><a href="/cv/">Read my CV</a></p>
+		</div>
+	</section>
+
+	<section class="container section" aria-labelledby="contact-title">
+		<h2 id="contact-title">Contact</h2>
+		<p class="muted">Email is the fastest way to reach me.</p>
+		<ContactLinks />
+	</section>
+</Base>
+
+<style>
+	.hero {
+		display: grid;
+		gap: var(--space-4);
+		padding-block: var(--space-16) var(--space-12);
+	}
+	.hero h1 {
+		max-width: 22ch;
+	}
+	.lead {
+		max-width: var(--measure);
+		font-size: var(--text-lg);
+		color: var(--muted);
+	}
+	.curve-wrap {
+		margin-block-start: var(--space-8);
+	}
+	.section {
+		display: grid;
+		gap: var(--space-6);
+		padding-block: var(--space-12);
+	}
+	.section-head {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: var(--space-4);
+	}
+	.stack {
+		display: grid;
+		gap: var(--space-4);
+	}
+</style>

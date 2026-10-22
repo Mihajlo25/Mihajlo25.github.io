@@ -1,0 +1,61 @@
+---
+// Decorative hero line: a generic daily time series (quiet night, morning
+// ramp, evening peak). Illustrative, no data behind it.
+---
+
+<svg class="curve" viewBox="0 0 600 110" aria-hidden="true" focusable="false">
+	<line class="base" x1="0" y1="108" x2="600" y2="108"></line>
+	<path
+		class="line"
+		pathLength="1"
+		d="M0 74 C40 80 70 90 100 90 C130 90 150 60 185 48 C215 38 250 44 290 48 C330 52 360 46 400 36 C430 28 455 20 475 22 C510 25 550 50 600 66"
+	></path>
+	<circle class="peak" cx="475" cy="21.5" r="4"></circle>
+</svg>
+
+<style>
+	.curve {
+		width: 100%;
+		overflow: visible;
+	}
+	.base {
+		stroke: var(--border);
+		stroke-width: 1;
+	}
+	.line {
+		fill: none;
+		stroke: var(--accent);
+		stroke-width: 2.5;
+		stroke-linecap: round;
+		stroke-dasharray: 1;
+	}
+	.peak {
+		fill: var(--highlight);
+	}
+
+	/* The one motion on the site: the line draws itself once on load. */
+	@media (prefers-reduced-motion: no-preference) {
+		.line {
+			animation: draw 1400ms var(--ease-out) 150ms both;
+		}
+		.peak {
+			animation: appear 300ms var(--ease-out) 1250ms both;
+		}
+	}
+	@keyframes draw {
+		from {
+			stroke-dashoffset: 1;
+		}
+		to {
+			stroke-dashoffset: 0;
+		}
+	}
+	@keyframes appear {
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+</style>

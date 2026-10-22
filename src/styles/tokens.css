@@ -1,0 +1,66 @@
+/*
+  Design tokens. The only place colors, type sizes and spacing are defined.
+  Contrast (WCAG): text/muted/accent all >= 5.7:1 on bg in both themes;
+  highlight (amber) 4.6:1 light, 8.9:1 dark. Border is decorative only.
+*/
+
+:root {
+	color-scheme: light dark;
+
+	/* Color: light */
+	--bg: #f7f6f2;
+	--surface: #ffffff;
+	--text: #1b1d1f;
+	--muted: #5c6166;
+	--accent: #0f6e5a;
+	--highlight: #b45309;
+	--border: #d9d6ce;
+
+	/* Type */
+	--font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+	--font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+	--text-xs: 0.8125rem;   /* 13px: mono labels, dates */
+	--text-sm: 0.9375rem;   /* 15px: secondary text */
+	--text-base: 1.0625rem; /* 17px: body */
+	--text-lg: 1.25rem;     /* 20px: h3, lead */
+	--text-xl: 1.625rem;    /* 26px: h2 */
+	--text-2xl: clamp(2rem, 1.4rem + 2.6vw, 3.25rem); /* h1, hero */
+
+	--leading-tight: 1.15;
+	--leading-heading: 1.25;
+	--leading-body: 1.6;
+
+	/* Space (4px base) */
+	--space-1: 0.25rem;
+	--space-2: 0.5rem;
+	--space-3: 0.75rem;
+	--space-4: 1rem;
+	--space-6: 1.5rem;
+	--space-8: 2rem;
+	--space-12: 3rem;
+	--space-16: 4rem;
+	--space-24: 6rem;
+
+	/* Layout */
+	--measure: 68ch;
+	--page-max: 70rem;
+	--gutter: clamp(1rem, 4vw, 2rem);
+	--radius: 4px;
+
+	/* Motion */
+	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	--duration-ui: 160ms;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #121416;
+		--surface: #1b1e21;
+		--text: #e8e6e1;
+		--muted: #9ba1a6;
+		--accent: #4cc3a0;
+		--highlight: #f0a44b;
+		--border: #33373b;
+	}
+}
